@@ -56,7 +56,7 @@ class Shop
   end
 end
 
-class AmazonEurope < Shop
+class Amazon < Shop
   @base_url = 'https://amazon.%s/dp/%s'
   @@field_xpath = {
     :name => "//span[@id='productTitle']//text()",
@@ -85,8 +85,9 @@ class AmazonEurope < Shop
     if not price.empty?
       price.to_s
         .sub(',', '.')
-        .sub(@currency[:code], '')
         .sub(@currency[:symbol], '')
+        .sub(@currency[:code], '')
+        .strip
         .to_f
     end
   end
@@ -97,12 +98,20 @@ class AmazonEurope < Shop
 end
 
 shops = {
-  :amazonfr => AmazonEurope.new('fr'),
-  :amazonde => AmazonEurope.new('de'),
-  :amazonit => AmazonEurope.new('it'),
-  :amazonnl => AmazonEurope.new('nl'),
-  :amazones => AmazonEurope.new('es'),
-  :amazonuk => AmazonEurope.new('co.uk', 'GBP', '£'),
+  :amazonau => Amazon.new('au', 'AUD', '$'),
+  :amazonbr => Amazon.new('com.br', 'R', 'R$'),
+  :amazonca => Amazon.new('ca', 'CDN', 'CDN$'),
+  :amazoncn => Amazon.new('cn', 'CNY', '￥'),
+  :amazonde => Amazon.new('de'),
+  :amazones => Amazon.new('es'),
+  :amazonfr => Amazon.new('fr'),
+  :amazonin => Amazon.new('in', 'INR', '₹'),
+  :amazonit => Amazon.new('it'),
+  :amazonjp => Amazon.new('co.jp', 'JPY', '￥'),
+  :amazonmx => Amazon.new('mx', 'MXN', '$'),
+  :amazonnl => Amazon.new('nl'),
+  :amazonuk => Amazon.new('co.uk', 'GBP', '£'),
+  :amazonus => Amazon.new('com', 'USD', '$'),
 }
 
 get '/:shop_name/:id' do |shop_name, id|
