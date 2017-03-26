@@ -6,19 +6,18 @@ require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/reloader' if settings.development?
 
+HTTP_HEADERS = {
+  'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.110 Safari/537.36'
+}
 
 class Shop
-  @@http_headers = {
-    'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.110 Safari/537.36'
-  }
-
   def initialize(base_url, field_xpath={})
     @base_url = base_url
     @field_xpath = field_xpath
   end
 
   def download_url_contents(url)
-    open(url, @@http_headers) {|handler| handler.read}
+    open(url, HTTP_HEADERS) {|handler| handler.read}
   end
 
   def get_item_info_from_id(id)
