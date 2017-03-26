@@ -114,11 +114,13 @@ shops = {
 }
 
 get '/:shop_name/:id' do |shop_name, id|
-  if shops.key?(shop_name.to_sym) then
-    shop = shops[shop_name.to_sym]
-    item = shop.get_item_info_from_id(id)
-    json item
-  else
+  begin
+    if shops.key?(shop_name.to_sym) then
+      shop = shops[shop_name.to_sym]
+      item = shop.get_item_info_from_id(id)
+      json item
+    end
+  rescue
     status 404
   end
 end
