@@ -24,7 +24,7 @@ bundler install
 And then just run the main script:
 
 ```
-ruby hmfw.rb
+ruby hmfw/main.rb
 ```
 
 You can call the API at: `http://localhost:4567`.
@@ -33,7 +33,12 @@ You can call the API at: `http://localhost:4567`.
 ## Example call
 
 ```
-GET http://localhost:4567/amazones/B01N9RTMWS
+GET http://localhost:4567/amazonuk/B01N9RTMWS
 
-
+{
+    "currency": "EUR",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/61Ly9jIq-cL._SL1000_.jpg",
+    "name": "HORI Compact Playstand for Nintendo Switch Officially Licensed by Nintendo",
+    "price": null
+}
 ```
