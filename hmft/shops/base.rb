@@ -16,15 +16,15 @@ class Shop
 
   def self.inherited(cls)
     # Register shops
-    @@shops[cls.name.downcase.to_sym] = cls.new if not cls.name.include? 'Base'
+    @@shops[cls.name.downcase.to_sym] = cls.new unless cls.name.include? 'Base'
   end
 
   def download_url_contents(url)
-    open(url, HTTP_HEADERS) {|handler| handler.read}
+    open(url, HTTP_HEADERS).map(&:read)
   end
 
   def get_item_info_from_id(id)
-    contents = download_url_contents(@base_url % [id])
+    contents = download_url_contents(format(@base_url, id))
     retrieve_info_from_contents contents
   end
 
@@ -32,13 +32,13 @@ class Shop
     @doc = Nokogiri::HTML contents
     item = {}
     @field_xpath.each do |key, value|
-      if not value.is_a? Enumerable
+      if !value.is_a? Enumerable
         item[key] = parse_field(key, @doc.xpath(value))
       else
         value.each do |xpath|
           field_value = @doc.xpath(xpath)
-          if not field_value.empty?
-            item[key] = parse_field(key, field_value) if not field_value.empty?
+          unless field_value.empty?
+            item[key] = parse_field(key, field_value)
             break
           end
         end
@@ -48,8 +48,8 @@ class Shop
   end
 
   def parse_field(key, value)
-    method_name = "parse_%s" % key
-    return self.send(method_name, value) if self.class.method_defined? method_name
+    method_name = format('parse_%s', key)
+    return send(method_name, value) if self.class.method_defined? method_name
     value
   end
 
